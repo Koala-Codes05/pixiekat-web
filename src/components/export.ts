@@ -1,3 +1,11 @@
-export { default as Navbar } from "./Navbar";
-export { default as HeroSection } from "./HeroSection";
-export { default as Footer } from "./Footer";
+// Export all components from a single file for easier imports
+import Navbar from './Navbar';
+import Footer from './Footer';
+import { HeroSection } from './HeroSection';
+
+export {
+  Navbar,
+  Footer,
+  HeroSection
+};
+// Add other component exports here

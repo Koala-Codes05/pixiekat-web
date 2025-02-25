@@ -28,3 +28,95 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Loading Screen Styles */
+.hero {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.pre-loader { 
+  width: 100%;
+  height: 100%;
+  padding: 2em;
+  position: fixed;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+  overflow: hidden;
+  background: var(--background);
+  z-index: 9999;
+}
+
+.pre-loader p {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--foreground);
+}
+
+.counter {
+  display: flex;
+  font-size: 3rem;
+  height: 3rem;
+  overflow: hidden;
+  color: var(--foreground);
+}
+
+.digit-1, .digit-2, .digit-3, .digit-4 {
+  position: relative;
+  height: 3rem;
+  overflow: hidden;
+}
+
+.num {
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 4px;
+  background-color: var(--foreground);
+  margin-top: 2rem;
+  transition: width 0.3s ease;
+}
+
+/* Pre-loader container */
+.pre-loader {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+/* Counter display */
+.counter {
+  font-size: 3rem;
+  font-weight: bold;
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Slide left effect when loading completes */
+.slide-left .counter {
+  transform: translateX(-100%);
+  opacity: 0.5; /* Fades slightly while sliding */
+}
+
+.slide-left::after {
+  content: "";
+  width: 80px; /* Thin line after sliding */
+  height: 2px;
+  background: black;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
