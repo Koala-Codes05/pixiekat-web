@@ -1,0 +1,30 @@
+/**
+ * Global CSS file for the application
+ * Contains:
+ * - Tailwind CSS imports
+ * - Custom CSS variables for theming
+ * - Dark mode configuration
+ * - Global styles and overrides
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #10061E;
+  --foreground: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #10061E;
+    --foreground: #ececea;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
