@@ -62,7 +62,7 @@ const Navbar = () => {
               </ul>
             </details>
           </li>
-          <li><Link href="/blogs">Blogs</Link></li>
+          <li><Link href="/blogs">News</Link></li>
           <li><Link href="/contact-us">Contact us</Link></li>
           
           {/* Auth buttons with nice backgrounds */}
@@ -114,7 +114,7 @@ const Navbar = () => {
                 <li><Link href="/events/event2">Event2</Link></li>
               </ul>
             </li>
-            <li><Link href="/blogs">Blogs</Link></li>
+            <li><Link href="/blogs">News</Link></li>
             <li><Link href="/contact-us">Contact us</Link></li>
             <li className="mt-2"><Link href="/login" className="btn btn-sm bg-base-300 w-full">Login</Link></li>
             <li className="mt-2"><Link href="/sign-up" className="btn btn-sm btn-primary w-full">Sign up</Link></li>
