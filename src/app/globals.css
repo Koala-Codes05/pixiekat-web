@@ -126,15 +126,15 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background-color: #10061E; /* Changed to #10061E (dark purple) */
-  z-index: 50;
-  pointer-events: all;
+  background-color: #10061E;
+  z-index: 9998;
+  pointer-events: none;
 }
 
 .loader_gallery {
@@ -142,14 +142,20 @@ body {
   gap: 2rem;
   height: 100vh;
   position: relative;
-  z-index: 20;
+  z-index: 9996;
   perspective: 2000px;
   transform-style: preserve-3d;
   transform: scale(0.75);
   justify-content: center;
   align-items: center;
-  padding: 0 4rem;
-  pointer-events: all; /* Enable interactions */
+  overflow: hidden;
+}
+
+/* Ensure body has no scroll during loading */
+body.loading {
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
 }
 
 /* First, reset all pointer-events */

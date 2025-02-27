@@ -35,62 +35,60 @@ const Navbar = () => {
         w-full 
         z-50 
         transition-all duration-300
+        px-4 h-16
         ${isScrolled 
           ? 'bg-[#1D232A]/95 backdrop-blur-sm shadow-lg' // Using the dark purple color with 95% opacity
           : 'bg-transparent'} // When at top, be completely transparent
       `}
     >
-      {/* Left side - Just the logo */}
+      {/* Left side - Logo */}
       <div className="flex-none">
-        <Link href="/" className="btn btn-ghost text-xl">
+        <Link href="/" className="btn btn-ghost text-xl px-4">
           PixieKat Store
         </Link>
       </div>
 
-      {/* Right side - All our navigation links and buttons */}
+      {/* Right side - Navigation */}
       <div className="flex-1 justify-end">
-        {/* Desktop menu - Only shows on big screens */}
-        <ul className="hidden lg:flex menu menu-horizontal px-1 items-center">
-          <li><Link href="/about-us">About us</Link></li>
-          <li><Link href="/products">Games</Link></li>
+        {/* Desktop menu */}
+        <ul className="hidden lg:flex menu menu-horizontal items-center gap-2">
+          <li><Link href="/about-us" className="px-4 py-2 hover:bg-base-200 rounded-lg">About us</Link></li>
+          <li><Link href="/products" className="px-4 py-2 hover:bg-base-200 rounded-lg">Games</Link></li>
           <li>
-            <details>
-              <summary>Events</summary>
-              <ul className="p-2 bg-background rounded-lg">
-                <li><Link href="/events/event1">Event1</Link></li>
-                <li><Link href="/events/event2">Event2</Link></li>
+            <details className="dropdown">
+              <summary className="px-4 py-2 hover:bg-base-200 rounded-lg">Events</summary>
+              <ul className="p-2 bg-base-200 rounded-lg shadow-lg mt-2 w-48">
+                <li><Link href="/events/event1" className="px-4 py-2 hover:bg-base-300 rounded-lg block">Event1</Link></li>
+                <li><Link href="/events/event2" className="px-4 py-2 hover:bg-base-300 rounded-lg block">Event2</Link></li>
               </ul>
             </details>
           </li>
-          <li><Link href="/blogs">News</Link></li>
-          <li><Link href="/contact-us">Contact us</Link></li>
+          <li><Link href="/blogs" className="px-4 py-2 hover:bg-base-200 rounded-lg">News</Link></li>
+          <li><Link href="/contact-us" className="px-4 py-2 hover:bg-base-200 rounded-lg">Contact us</Link></li>
           
-          {/* Auth buttons with nice backgrounds */}
-          <li className="ml-4">
+          {/* Auth buttons */}
+          <div className="flex items-center gap-2 ml-4">
             <Link 
               href="/login" 
-              className="btn btn-sm bg-base-200 hover:bg-base-300"
+              className="btn btn-sm bg-base-200 hover:bg-base-300 min-w-[80px]"
             >
               Login
             </Link>
-          </li>
-          <li>
             <Link 
               href="/sign-up" 
-              className="btn btn-sm btn-primary"
+              className="btn btn-sm btn-primary min-w-[80px]"
             >
               Sign up
             </Link>
-          </li>
+          </div>
         </ul>
 
-        {/* Mobile menu - Only shows on small screens */}
+        {/* Mobile menu */}
         <div className="dropdown dropdown-end lg:hidden">
-          {/* Hamburger button */}
-          <div tabIndex={0} role="button" className="btn btn-ghost btn-sm">
+          <div tabIndex={0} role="button" className="btn btn-ghost btn-sm px-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
+              className="h-6 w-6"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -103,21 +101,24 @@ const Navbar = () => {
               />
             </svg>
           </div>
-          {/* Mobile menu items */}
-          <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-200 rounded-box w-52">
-            <li><Link href="/about-us">About us</Link></li>
-            <li><Link href="/products">Games</Link></li>
+          <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg bg-base-200 rounded-box w-52">
+            <li><Link href="/about-us" className="py-2">About us</Link></li>
+            <li><Link href="/products" className="py-2">Games</Link></li>
             <li>
-              <span>Events</span>
-              <ul className="p-1">
-                <li><Link href="/events/event1">Event1</Link></li>
-                <li><Link href="/events/event2">Event2</Link></li>
-              </ul>
+              <details>
+                <summary className="py-2">Events</summary>
+                <ul className="p-2 bg-base-300 rounded-lg">
+                  <li><Link href="/events/event1">Event1</Link></li>
+                  <li><Link href="/events/event2">Event2</Link></li>
+                </ul>
+              </details>
             </li>
-            <li><Link href="/blogs">News</Link></li>
-            <li><Link href="/contact-us">Contact us</Link></li>
-            <li className="mt-2"><Link href="/login" className="btn btn-sm bg-base-300 w-full">Login</Link></li>
-            <li className="mt-2"><Link href="/sign-up" className="btn btn-sm btn-primary w-full">Sign up</Link></li>
+            <li><Link href="/blogs" className="py-2">News</Link></li>
+            <li><Link href="/contact-us" className="py-2">Contact us</Link></li>
+            <div className="pt-2 space-y-2">
+              <Link href="/login" className="btn btn-sm bg-base-300 w-full">Login</Link>
+              <Link href="/sign-up" className="btn btn-sm btn-primary w-full">Sign up</Link>
+            </div>
           </ul>
         </div>
       </div>

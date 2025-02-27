@@ -170,35 +170,65 @@ const Loading = ({
     return () => clearTimeout(timer);
   }, [onComplete]);
 
+  // Add this useEffect to prevent scrolling while loading is active
+  useEffect(() => {
+    // Disable scrolling on mount
+    document.body.style.overflow = 'hidden';
+    
+    // Re-enable scrolling on cleanup
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   return (
-    <div ref={backgroundRef} className="fixed inset-0 z-50 bg-[#10061E]">
-      {/* Gallery Structure */}
-      <div className="loader_wrapper">
+    <div 
+      ref={backgroundRef} 
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#10061E',
+        zIndex: 99999,
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      <div className="loader_wrapper" style={{ overflow: 'hidden' }}>
         {/* Circles positioned first in DOM but with lower z-index */}
         <div ref={circleTopRef} className="loader_circle loader_circle-top" />
         <div ref={circleBottomRef} className="loader_circle loader_circle-bottom" />
 
-        {/* Pixiekat Text - Modified */}
+        {/* Pixiekat Text with adjusted z-index */}
         <div 
           ref={pixiekatRef} 
           className="absolute inset-0 flex items-center justify-center text-yellow-200 text-[50px] md:text-[80px] font-bold pixiekat-text pointer-events-none"
           style={{ 
-            zIndex: 50,
+            zIndex: 9997,
             textShadow: '0 4px 8px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.3)'
           }}
         >
           PIXIEKAT
         </div>
 
-        {/* Gallery with higher z-index */}
-        <div ref={galleryRef} className="loader_gallery">
+        {/* Gallery with adjusted positioning */}
+        <div 
+          ref={galleryRef} 
+          className="loader_gallery"
+          style={{ overflow: 'hidden' }}
+        >
           {images.map((src, index) => (
             <div 
               key={index} 
               className={`loader_gallery_figure grayscale ${index === 4 ? 'center-image' : ''}`}
               ref={index === 4 ? centerImageRef : null}
               style={{
-                boxShadow: '0 4px 30px rgba(0, 0, 0, 0.4)'
+                boxShadow: '0 4px 30px rgba(0, 0, 0, 0.4)',
+                overflow: 'hidden'
               }}
             >
               <img
@@ -206,7 +236,8 @@ const Loading = ({
                 alt=""
                 className="loader_gallery_image"
                 style={{
-                  filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5))'
+                  filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5))',
+                  pointerEvents: 'none'
                 }}
               />
             </div>
@@ -214,8 +245,8 @@ const Loading = ({
         </div>
       </div>
 
-      {/* Counter */}
-      <div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 z-[100]">
+      {/* Counter with highest z-index */}
+      <div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 z-[9999]">
         <AnimatePresence mode="wait">
           {!countComplete ? (
             <motion.div
@@ -236,7 +267,7 @@ const Loading = ({
                 style={{
                   textShadow: "0 0 10px rgba(255,255,255,0.5)",
                   position: "relative",
-                  zIndex: 100
+                  zIndex: 9999
                 }}
               >
                 000%

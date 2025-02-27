@@ -10,8 +10,21 @@ export default function ClientLayout({
   children: React.ReactNode 
 }) {
   const [loading, setLoading] = useState(true);
-  const heroRef = useRef(null);
-  const heroContainerRef = useRef(null);
+  const heroRef = useRef<HTMLElement>(null);
+  const heroContainerRef = useRef<HTMLDivElement>(null);
+
+  // Prevent scrolling when loading
+  useEffect(() => {
+    if (loading) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.height = '100vh';
+      document.body.style.width = '100vw';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.height = '';
+      document.body.style.width = '';
+    }
+  }, [loading]);
 
   // Failsafe: If loading gets stuck, force complete after 6 seconds
   useEffect(() => {
@@ -28,19 +41,6 @@ export default function ClientLayout({
 
   return (
     <>
-      {/* Always render the main content, but hide it when loading */}
-      <div 
-        ref={heroContainerRef} 
-        className={`${loading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
-      >
-        <Navbar />
-        <main ref={heroRef}>
-          {children}
-        </main>
-        <Footer />
-      </div>
-
-      {/* Loading overlay */}
       {loading && (
         <Loading 
           onComplete={handleLoadingComplete} 
@@ -48,6 +48,21 @@ export default function ClientLayout({
           heroContainerRef={heroContainerRef}
         />
       )}
+      
+      <div 
+        ref={heroContainerRef} 
+        className={`${loading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+        style={{ 
+          visibility: loading ? 'hidden' : 'visible',
+          position: 'relative'
+        }}
+      >
+        <Navbar />
+        <main ref={heroRef}>
+          {children}
+        </main>
+        <Footer />
+      </div>
     </>
   );
 }
