@@ -60,17 +60,15 @@ const Loading = ({
 
   useEffect(() => {
     const counter = counterRef.current;
-    const background = backgroundRef.current;
+    const gallery = galleryRef.current;
     
-    if (!counter || !background) return;
+    if (!counter || !gallery) return;
 
-    if (galleryRef.current) {
-      gsap.set(galleryRef.current, { scale: 0.75 });
-    }
-    
-    if (circleTopRef.current && circleBottomRef.current) {
-      gsap.set([circleTopRef.current, circleBottomRef.current], { yPercent: 0 });
-    }
+    // Set initial state - all images grayscale
+    const figures = Array.from(gallery.children);
+    figures.forEach(figure => {
+      figure.classList.add('grayscale');
+    });
 
     // Counter Animation
     const countTl = gsap.timeline({ delay: 0.1 });
@@ -82,8 +80,27 @@ const Loading = ({
       ease: "power2.inOut",
       onUpdate: () => {
         if (counter) {
-          const currentValue = counter.innerText || "0";
-          counter.innerText = String(parseInt(currentValue)).padStart(3, "0") + "%";
+          const currentValue = parseInt(counter.innerText || "0");
+          counter.innerText = String(currentValue).padStart(3, "0") + "%";
+
+          // Color reveal logic
+          if (gallery) {
+            const figures = Array.from(gallery.children);
+            const middleIndex = Math.floor(figures.length / 2);
+            const progress = currentValue / 100;
+            
+            // Calculate how many images to reveal
+            const totalToReveal = Math.ceil(figures.length * progress);
+            const halfToReveal = Math.floor(totalToReveal / 2);
+
+            figures.forEach((figure, index) => {
+              const distanceFromMiddle = Math.abs(index - middleIndex);
+              if (distanceFromMiddle <= halfToReveal) {
+                figure.classList.add('reveal-color');
+                figure.classList.remove('grayscale');
+              }
+            });
+          }
         }
       },
       onComplete: () => {
@@ -161,10 +178,10 @@ const Loading = ({
         <div ref={circleTopRef} className="loader_circle loader_circle-top" />
         <div ref={circleBottomRef} className="loader_circle loader_circle-bottom" />
 
-        {/* Pixiekat Text - NEW */}
+        {/* Pixiekat Text - Modified */}
         <div 
           ref={pixiekatRef} 
-          className="absolute inset-0 flex items-center justify-center text-yellow-200 text-[50px] md:text-[80px] font-bold pixiekat-text"
+          className="absolute inset-0 flex items-center justify-center text-yellow-200 text-[50px] md:text-[80px] font-bold pixiekat-text pointer-events-none"
           style={{ 
             zIndex: 50,
             textShadow: '0 4px 8px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.3)'
@@ -178,7 +195,7 @@ const Loading = ({
           {images.map((src, index) => (
             <div 
               key={index} 
-              className={`loader_gallery_figure ${index === 4 ? 'center-image' : ''}`}
+              className={`loader_gallery_figure grayscale ${index === 4 ? 'center-image' : ''}`}
               ref={index === 4 ? centerImageRef : null}
               style={{
                 boxShadow: '0 4px 30px rgba(0, 0, 0, 0.4)'
