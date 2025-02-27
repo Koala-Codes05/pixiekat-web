@@ -120,3 +120,125 @@ body {
   left: 50%;
   transform: translateX(-50%);
 }
+
+/* Loader styles */
+.loader_wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: #10061E; /* Changed to #10061E (dark purple) */
+  z-index: 50;
+}
+
+.loader_gallery {
+  display: flex;
+  gap: 0.5rem; /* Small gap between panels */
+  height: 100vh;
+  position: relative;
+  z-index: 20; /* Higher z-index to appear above circles */
+  perspective: 1000px; /* 3D effect */
+  transform-style: preserve-3d;
+  transform: scale(0.75); /* Scale down by 25% */
+}
+
+.loader_gallery_figure {
+  position: relative;
+  width: 136.4px; /* Increased by 10% from 124px */
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  transform: rotateY(15deg); /* Slight rotation for 3D effect */
+  transform-origin: center center;
+  z-index: 20; /* Same as gallery to maintain stacking context */
+  transition: all 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4); /* Add shadow to figure containers */
+}
+
+.loader_gallery_image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5)); /* Add shadow to images */
+}
+
+.loader_circle {
+  position: absolute;
+  width: 200%; /* Doubled from 100% */
+  height: 60%; /* Increased from 50% */
+  background-color: #10061E; /* Changed to #10061E (dark purple) */
+  z-index: 10; /* Lower z-index to appear behind images */
+  transform-origin: center;
+  transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+  left: -50%; /* Center the wider circle */
+}
+
+.loader_circle-top {
+  top: -40%; /* Doubled the distance from -20% to -40% */
+  border-radius: 0 0 50% 50%;
+  border-bottom-left-radius: 50% 100%;
+  border-bottom-right-radius: 50% 100%;
+}
+
+.loader_circle-bottom {
+  bottom: -40%; /* Doubled the distance from -20% to -40% */
+  border-radius: 50% 50% 0 0;
+  border-top-left-radius: 50% 100%;
+  border-top-right-radius: 50% 100%;
+}
+
+.counter-container {
+  position: relative;
+  z-index: 30; /* Highest z-index to stay on top */
+}
+
+/* Updated counter styles */
+.counter-container div {
+  font-size: 50px; /* Increased by 25% from 40px */
+  font-weight: bold;
+  color: white;
+}
+
+@media (min-width: 768px) {
+  .counter-container div {
+    font-size: 75px; /* Increased by 25% from 60px */
+  }
+}
+
+/* Add this to your CSS */
+.center-image {
+  transition: all 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 25; /* Higher than other gallery items */
+}
+
+/* Add these styles for the center image */
+.center-image {
+  z-index: 30; /* Higher than other gallery items */
+  transition: all 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Add these styles for the loading images and text */
+.loader_gallery_image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5)); /* Add shadow to images */
+}
+
+.pixiekat-text {
+  text-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.5),    /* Basic shadow */
+    0 8px 24px rgba(0, 0, 0, 0.3);   /* Larger, softer shadow */
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2)); /* Subtle glow effect */
+}
