@@ -1,36 +1,94 @@
 "use client";
 
-
-
 import React, { useState } from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 const SignUp = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
 
-  const handleDemoSignUp = (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
+
+    try {
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        router.push('/login?message=Account created successfully');
+      } else {
+        console.error('Signup failed:', data.error);
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+    }
   };
 
   return (
     <PageWrapper>
-      <div className="min-h-screen flex items-center justify-end px-4 relative">
+      <div className="min-h-screen flex flex-col lg:flex-row lg:items-center lg:justify-end px-4 relative pb-24"> {/* Added pb-24 for footer spacing */}
         {/* Background Image/Overlay */}
         <div 
           className="absolute inset-0 bg-cover bg-center z-0"
           style={{
-            backgroundImage: 'url(/auth-bg.jpg)', // Add your background image
+            backgroundImage: 'url(/auth-bg.jpg)',
             filter: 'brightness(0.3)'
           }}
         />
 
-        {/* Left Side Content */}
+        {/* Mobile/Tablet Layout Container */}
+        <div className="relative z-10 pt-8 lg:hidden flex flex-col items-center text-center px-4">
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <h2 className="text-4xl font-bold text-white mb-4">
+              Welcome to{' '}
+              <span className="bg-gradient-to-r from-yellow-500 to-pink-500 text-transparent bg-clip-text">
+                PixieKat
+              </span>
+            </h2>
+            {/* Remove the mobile text */}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="w-full max-w-[300px] mb-8"
+          >
+            <img 
+              src="/img/auth/signup.png" 
+              alt="Sign up illustration" 
+              className="w-full h-auto object-contain"
+            />
+          </motion.div>
+        </div>
+
+        {/* Desktop Left Side Content */}
         <motion.div 
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -48,7 +106,7 @@ const SignUp = () => {
           </p>
         </motion.div>
 
-        {/* Left Center Image */}
+        {/* Desktop Left Center Image */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -63,7 +121,7 @@ const SignUp = () => {
         </motion.div>
 
         {/* Right side content (signup form) */}
-        <div className="w-full max-w-[500px] relative z-10 mr-4 lg:mr-16">
+        <div className="w-full lg:max-w-[500px] relative z-10 lg:mr-16">
           <motion.div 
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}
@@ -104,28 +162,52 @@ const SignUp = () => {
               </div>
             </div>
 
-            <form onSubmit={handleDemoSignUp} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-1">
                 <input
                   type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   placeholder="Full Name"
                   className="w-full p-3 bg-[#2A323C] rounded-lg border border-gray-600 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                  required
                 />
               </div>
 
               <div className="space-y-1">
                 <input
                   type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder="Email Address"
                   className="w-full p-3 bg-[#2A323C] rounded-lg border border-gray-600 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                  required
                 />
               </div>
               
               <div className="space-y-1">
                 <input
                   type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
                   placeholder="Password"
                   className="w-full p-3 bg-[#2A323C] rounded-lg border border-gray-600 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1">
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm Password"
+                  className="w-full p-3 bg-[#2A323C] rounded-lg border border-gray-600 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                  required
                 />
               </div>
 
@@ -134,6 +216,7 @@ const SignUp = () => {
                   type="checkbox" 
                   id="terms" 
                   className="form-checkbox bg-[#2A323C] border-gray-600 rounded text-yellow-500 focus:ring-yellow-500"
+                  required
                 />
                 <label htmlFor="terms" className="ml-2 text-sm text-gray-400">
                   I agree to the{' '}
@@ -151,16 +234,9 @@ const SignUp = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="submit"
-                disabled={isLoading}
-                className={`w-full bg-gradient-to-r from-yellow-500 to-pink-500 text-white font-bold py-3 px-4 rounded-lg transition-all
-                  ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:from-yellow-400 hover:to-pink-400'}`}
+                className="w-full bg-gradient-to-r from-yellow-500 to-pink-500 text-white font-bold py-3 px-4 rounded-lg transition-all hover:from-yellow-400 hover:to-pink-400"
               >
-                {isLoading ? (
-                  <div className="flex items-center justify-center">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                    Creating Account...
-                  </div>
-                ) : 'Sign Up'}
+                Sign Up
               </motion.button>
             </form>
 
@@ -180,4 +256,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp
+export default SignUp;

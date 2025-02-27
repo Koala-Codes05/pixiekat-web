@@ -19,7 +19,7 @@ const Login = () => {
 
   return (
     <PageWrapper>
-      <div className="min-h-screen flex items-center justify-end px-4 relative">
+      <div className="min-h-screen flex flex-col lg:flex-row lg:items-center lg:justify-end px-4 relative pb-24"> {/* Added pb-24 for footer spacing */}
         {/* Background Image/Overlay */}
         <div 
           className="absolute inset-0 bg-cover bg-center z-0"
@@ -29,7 +29,37 @@ const Login = () => {
           }}
         />
 
-        {/* Left Side Content */}
+        {/* Mobile/Tablet Layout Container */}
+        <div className="relative z-10 pt-8 lg:hidden flex flex-col items-center text-center px-4">
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <h2 className="text-4xl font-bold text-white mb-4">
+              Welcome to{' '}
+              <span className="bg-gradient-to-r from-yellow-500 to-pink-500 text-transparent bg-clip-text">
+                PixieKat
+              </span>
+            </h2>
+            {/* Remove the mobile text */}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="w-full max-w-[300px] mb-8"
+          >
+            <img 
+              src="/img/auth/login.png" 
+              alt="Login illustration" 
+              className="w-full h-auto object-contain"
+            />
+          </motion.div>
+        </div>
+
+        {/* Desktop Left Side Content */}
         <motion.div 
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -47,7 +77,7 @@ const Login = () => {
           </p>
         </motion.div>
 
-        {/* Left Center Image */}
+        {/* Desktop Left Center Image */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -62,7 +92,7 @@ const Login = () => {
         </motion.div>
 
         {/* Right side content (login form) */}
-        <div className="w-full max-w-[500px] relative z-10 mr-4 lg:mr-16">
+        <div className="w-full lg:max-w-[500px] relative z-10 lg:mr-16">
           <motion.div 
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}
