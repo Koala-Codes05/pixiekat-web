@@ -417,3 +417,84 @@ body.loading {
   transform: scale(1.1);
   filter: contrast(1.2) brightness(1.2);
 }
+
+/* Add these animations to your existing globals.css */
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 15s ease infinite;
+}
+
+@keyframes text-shimmer {
+  0% { background-position: -200% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.animate-text-shimmer {
+  background-size: 200% auto;
+  animation: text-shimmer 3s linear infinite;
+}
+
+/* Hover Effects for Game Cards */
+.game-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.game-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Rating Stars Animation */
+@keyframes twinkle {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.rating-star:hover {
+  animation: twinkle 1s ease infinite;
+}
+
+/* Category Navigation Effects */
+.category-header {
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.category-header::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(to right, #f59e0b, #ec4899);
+  transition: width 0.3s ease;
+}
+
+.category-header:hover::after {
+  width: 100%;
+}
+
+/* Parallax Scroll Effect */
+.parallax-bg {
+  transform: translateZ(-1px) scale(2);
+  z-index: -1;
+}
+
+/* Loading Animation */
+@keyframes content-fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.content-reveal {
+  animation: content-fade-in 0.8s ease forwards;
+}
