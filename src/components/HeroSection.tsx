@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import { HiArrowRight } from 'react-icons/hi';
 
 export default function HeroSection() {
   const [isMobile, setIsMobile] = useState(false);
@@ -25,6 +26,28 @@ export default function HeroSection() {
 
   return (
     <section className="relative h-[85vh] md:h-screen flex items-center justify-center px-4 overflow-hidden">
+      {/* Black rectangle with blue button on top */}
+      <div className="absolute top-[10vw] right-[5%] z-30 group">
+        {/* Black rectangle */}
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="w-[15vw] h-[4vw] bg-black/100 backdrop-blur-sm shadow-lg relative"
+        > 
+          {/* Arrow */}
+          <div className="absolute top-1/2 right-6 -translate-y-1/2">
+            <HiArrowRight className="text-white text-xl transform transition-transform duration-300 group-hover:translate-x-2" />
+          </div>
+        </motion.div>
+        {/* Blue button */}
+        <motion.div
+          className="absolute top-1.5 left-[5%] w-[9vw] h-[3vw] bg-blue-500 rounded-full shadow-lg grid place-items-center text-white hover:bg-white hover:text-black transition-colors duration-300"
+        >
+          Get Started
+        </motion.div>
+      </div>
+
       {/* Background with abstract lines */}
       <div className="absolute inset-0 bg-[#10061E]">
         {/* Abstract Lines Container */}
@@ -63,7 +86,7 @@ export default function HeroSection() {
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="absolute top-10 left-5 z-20"
+        className="absolute top-10 left-5 z-30"
       >
         <Image
           src="/img/hero/Valorant-Logo.webp"
@@ -94,11 +117,8 @@ export default function HeroSection() {
       <div className="absolute z-[3] w-full h-full flex items-center justify-center scale-[0.65] sm:scale-[0.7] md:scale-[0.75] lg:scale-[0.8] xl:scale-[0.85] 2xl:scale-[0.9]">
         {/* Faze Image (Cardbox) */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1 }}
           style={{ y: backgroundY }}
-          className="relative w-full h-full flex items-center justify-center mt-16 md:mt-20" // Added margin-top to avoid navbar
+          className="relative w-full h-full flex items-center justify-center mt-16 md:mt-20"
         >
           <Image
             src="/img/hero/Faze.png"
