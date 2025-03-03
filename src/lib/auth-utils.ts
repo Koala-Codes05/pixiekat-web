@@ -10,60 +10,103 @@ export interface PendingVerification {
     };
     expiresAt: number;
     attempts: number;
+    createdAt: number;
+}
+
+interface FailedAttempt {
+    count: number;
+    lastAttempt: number;
+    blockedUntil?: number;
 }
 
 // Constants
 export const MAX_VERIFICATION_ATTEMPTS = 5;
 export const VERIFICATION_EXPIRY = 10 * 60 * 1000; // 10 minutes
-export const ATTEMPT_COOLDOWN = 60 * 1000; // 1 minute
+export const ATTEMPT_COOLDOWN = 60 * 1000; // 1 minute cooldown
+
+const MAX_ATTEMPTS = 5; // Maximum failed attempts before blocking
+const BLOCK_DURATION = 15 * 60 * 1000; // 15 minutes in milliseconds
+const ATTEMPT_RESET = 30 * 60 * 1000; // Reset attempts after 30 minutes
 
 // Verification storage (should be replaced with Redis in production)
 export const pendingVerifications = new Map<string, PendingVerification>();
-export const failedAttempts = new Map<string, { count: number; lastAttempt: number }>();
+const failedAttempts = new Map<string, FailedAttempt>();
 
 // Generate a secure 8-character hex code
 export function generateSecureCode(): string {
     return crypto.randomBytes(4).toString('hex');
 }
 
-// Clean up expired verifications periodically
-setInterval(() => {
+// Clean up expired verifications and attempts
+export function cleanupExpiredData(): void {
     const now = Date.now();
-    for (const [email, data] of pendingVerifications.entries()) {
-        if (data.expiresAt < now) {
-            pendingVerifications.delete(email);
-        }
-    }
     
     // Clean up old failed attempts
     for (const [email, data] of failedAttempts.entries()) {
-        if (now - data.lastAttempt > VERIFICATION_EXPIRY) {
+        // Reset if block duration expired or no activity for ATTEMPT_RESET
+        if ((data.blockedUntil && now >= data.blockedUntil) || 
+            (now - data.lastAttempt > ATTEMPT_RESET)) {
             failedAttempts.delete(email);
         }
     }
-}, 5 * 60 * 1000); // Clean every 5 minutes
-
-// Check if too many attempts have been made
-export function hasTooManyAttempts(email: string): boolean {
-    const attempts = failedAttempts.get(email);
-    if (!attempts) return false;
     
-    // Reset attempts if cooldown has passed
-    if (Date.now() - attempts.lastAttempt > ATTEMPT_COOLDOWN) {
+    // Clean up expired verifications
+    for (const [email, data] of pendingVerifications.entries()) {
+        if (now - data.createdAt > VERIFICATION_EXPIRY) {
+            pendingVerifications.delete(email);
+        }
+    }
+}
+
+export function hasTooManyAttempts(email: string): boolean {
+    const attempt = failedAttempts.get(email);
+    if (!attempt) return false;
+
+    // Check if user is blocked
+    if (attempt.blockedUntil && Date.now() < attempt.blockedUntil) {
+        return true;
+    }
+
+    // If block duration has expired, reset attempts
+    if (attempt.blockedUntil && Date.now() >= attempt.blockedUntil) {
         failedAttempts.delete(email);
         return false;
     }
-    
-    return attempts.count >= MAX_VERIFICATION_ATTEMPTS;
+
+    // Reset attempts if inactive for too long
+    if (Date.now() - attempt.lastAttempt > ATTEMPT_RESET) {
+        failedAttempts.delete(email);
+        return false;
+    }
+
+    // Return true if max attempts reached (not yet blocked, but should be)
+    return attempt.count >= MAX_ATTEMPTS;
 }
 
-// Record a failed attempt
 export function recordFailedAttempt(email: string): void {
-    const current = failedAttempts.get(email);
-    failedAttempts.set(email, {
-        count: (current?.count || 0) + 1,
-        lastAttempt: Date.now()
-    });
+    const attempt = failedAttempts.get(email) || { count: 0, lastAttempt: 0 };
+    
+    // Reset attempts if block duration expired
+    if (attempt.blockedUntil && Date.now() >= attempt.blockedUntil) {
+        failedAttempts.delete(email);
+        return;
+    }
+
+    // Reset if inactive for too long
+    if (Date.now() - attempt.lastAttempt > ATTEMPT_RESET) {
+        failedAttempts.delete(email);
+        return;
+    }
+
+    attempt.count += 1;
+    attempt.lastAttempt = Date.now();
+
+    // Block user if max attempts reached
+    if (attempt.count >= MAX_ATTEMPTS) {
+        attempt.blockedUntil = Date.now() + BLOCK_DURATION;
+    }
+
+    failedAttempts.set(email, attempt);
 }
 
 // Get verification with built-in expiry check
