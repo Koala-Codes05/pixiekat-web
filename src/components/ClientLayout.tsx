@@ -45,8 +45,8 @@ export default function ClientLayout({
       {loading && (
         <Loading 
           onComplete={handleLoadingComplete} 
-          heroRef={heroRef} 
-          heroContainerRef={heroContainerRef}
+          heroRef={heroRef as React.RefObject<HTMLElement>} 
+          heroContainerRef={heroContainerRef as React.RefObject<HTMLDivElement>}
         />
       )}
       
