@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Navbar, Footer, Loading } from "@/components/index";
+import { Providers } from "@/app/providers";
 import gsap from "gsap";
 
 export default function ClientLayout({ 
@@ -40,7 +41,7 @@ export default function ClientLayout({
   };
 
   return (
-    <>
+    <Providers>
       {loading && (
         <Loading 
           onComplete={handleLoadingComplete} 
@@ -63,6 +64,6 @@ export default function ClientLayout({
         </main>
         <Footer />
       </div>
-    </>
+    </Providers>
   );
 }

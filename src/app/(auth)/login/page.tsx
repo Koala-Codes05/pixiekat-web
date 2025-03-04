@@ -4,17 +4,63 @@ import React, { useState } from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { toast } from 'react-hot-toast';
+import { useAuth } from '@/context/AuthContext';
 
 const Login = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const message = searchParams.get('message');
   const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+  const { login } = useAuth();
+  
+  // Show message if redirected with a message parameter
+  React.useEffect(() => {
+    if (message) {
+      toast.success(message);
+    }
+  }, [message]);
 
-  const handleDemoLogin = (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate loading for demo purposes
-    setTimeout(() => {
+    
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Update auth context with user data
+        login(data.user);
+        router.push('/dashboard'); // Redirect to dashboard or home
+      } else {
+        toast.error(data.error || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      toast.error('Something went wrong. Please try again.');
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -133,20 +179,28 @@ const Login = () => {
               </div>
             </div>
 
-            <form onSubmit={handleDemoLogin} className="space-y-4">
+            <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-1">
                 <input
                   type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder="Email Address"
                   className="w-full p-3 bg-[#2A323C] rounded-lg border border-gray-600 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                  required
                 />
               </div>
               
               <div className="space-y-1">
                 <input
                   type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
                   placeholder="Password"
                   className="w-full p-3 bg-[#2A323C] rounded-lg border border-gray-600 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                  required
                 />
               </div>
 
