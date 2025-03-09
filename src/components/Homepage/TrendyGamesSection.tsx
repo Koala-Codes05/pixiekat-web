@@ -162,7 +162,7 @@ export default function TrendyGamesSection() {
     threshold: 0.1
   });
   
-  const swiperRef = useRef<SwiperType>();
+  const swiperRef = useRef<SwiperType | null>(null);
 
   const handlePrevClick = () => {
     if (swiperRef.current) {
