@@ -36,6 +36,13 @@ export default function ClientLayout({
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">
+      {loading && (
+        <Loading 
+          onComplete={() => setLoading(false)}
+          heroRef={heroRef}
+          heroContainerRef={heroContainerRef}
+        />
+      )}
       <Providers>
         <Navbar />
         <main className="relative overflow-x-hidden">

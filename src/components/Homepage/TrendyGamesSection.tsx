@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -8,6 +8,10 @@ import { useInView } from 'react-intersection-observer';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Mousewheel } from 'swiper/modules';
 import type { Swiper as SwiperType } from 'swiper';
+import gsap from 'gsap';
+import ScrollTrigger from 'gsap/dist/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 // Import Swiper styles
 import 'swiper/css';
@@ -71,11 +75,52 @@ const trendyGames = [
   }
 ];
 
-const GameCard = ({ game }: { game: typeof trendyGames[0] }) => {
+const GameCard = ({ game, index }: { game: typeof trendyGames[0]; index: number }) => {
+  const cardRef = useRef(null);
+
+  useEffect(() => {
+    const card = cardRef.current;
+
+    gsap.set(card, {
+      opacity: 0,
+      y: 30
+    });
+
+    ScrollTrigger.create({
+      trigger: card,
+      start: "top bottom-=100", // Starts animation when card is 100px from bottom of viewport
+      end: "top center+=100",
+      onEnter: () => {
+        gsap.to(card, {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          delay: index * 0.1, // Tighter delay for closer sequence
+          ease: "power2.out"
+        });
+      },
+      onLeaveBack: () => {
+        gsap.to(card, {
+          opacity: 0,
+          y: 30,
+          duration: 0.4,
+          ease: "power2.in"
+        });
+      }
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, [index]);
+
   return (
-    <div className="relative w-[280px] h-[380px] rounded-2xl overflow-hidden 
-                    bg-gradient-to-b from-gray-800 to-gray-900 shadow-xl
-                    transform transition-transform duration-300 hover:scale-105">
+    <div 
+      ref={cardRef}
+      className="relative w-[280px] h-[380px] rounded-2xl overflow-hidden 
+                bg-gradient-to-b from-gray-800 to-gray-900 shadow-xl
+                transform transition-transform duration-300 hover:scale-105 opacity-0"
+    >
       {/* Sale Tag */}
       <div className="absolute top-4 right-4 z-10 bg-red-500 text-white px-3 py-1 rounded-full
                     text-sm font-semibold shadow-lg">
@@ -142,8 +187,11 @@ export default function TrendyGamesSection() {
         {/* Section Header */}
         <div className="mb-12 flex justify-between items-start">
           <div className="text-left">
-            <h2 className="text-4xl font-bold text-white mb-4">Trendy Games</h2>
-            <p className="text-gray-400 max-w-2xl">
+            <h2 className="text-4xl font-bold text-white mb-4">
+              Trendy{' '}
+              <span className="text-gradient-shine">Games</span>
+            </h2>
+            <p className="hidden md:block text-gray-400 text-base max-w-2xl">
               Discover our most popular game packages with exclusive offers and limited-time deals
             </p>
           </div>
@@ -184,7 +232,7 @@ export default function TrendyGamesSection() {
         </div>
 
         {/* Swiper Component */}
-        <div className="relative overflow-hidden">
+        <div className="relative w-full overflow-visible">
           <Swiper
             onBeforeInit={(swiper) => {
               swiperRef.current = swiper;
@@ -192,34 +240,33 @@ export default function TrendyGamesSection() {
             modules={[Navigation, Mousewheel]}
             spaceBetween={24}
             slidesPerView="auto"
-            className="trendy-games-swiper"
+            className="trendy-games-swiper !overflow-visible"
             centeredSlides={false}
             direction="horizontal"
-            mousewheel={{
-              forceToAxis: true,
-              sensitivity: 3,
-              thresholdDelta: 10
-            }}
+            mousewheel={false}
             resistance={false}
-            touchRatio={2}
+            touchRatio={1}
             speed={400}
+            watchOverflow={true}
+            observer={true}
+            observeParents={true}
             breakpoints={{
               320: {
                 slidesPerView: 'auto',
-                spaceBetween: 16
+                spaceBetween: 16,
               },
               768: {
                 slidesPerView: 'auto',
-                spaceBetween: 24
+                spaceBetween: 24,
               }
             }}
           >
-            {trendyGames.map((game) => (
+            {trendyGames.map((game, index) => (
               <SwiperSlide 
                 key={game.id} 
-                className="!w-[280px] !h-[400px] flex flex-col justify-center items-center transition-all duration-500"
+                className="!w-[280px] !h-[380px] scale-90 md:scale-100 flex flex-col justify-center items-center transition-all duration-500"
               >
-                <GameCard game={game} />
+                <GameCard game={game} index={index} />
               </SwiperSlide>
             ))}
           </Swiper>
