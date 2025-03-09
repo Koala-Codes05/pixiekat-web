@@ -5,7 +5,7 @@
  * - Will be expanded to include featured products, categories, and other homepage elements
  */
 
-import HeroSection from "@/components/HeroSection";
+import { HeroSection } from "@/components";
 
 export default function Home() {
   return (
