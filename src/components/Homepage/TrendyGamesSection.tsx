@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Mousewheel } from 'swiper/modules';
+import type { Swiper as SwiperType } from 'swiper';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -115,6 +116,20 @@ export default function TrendyGamesSection() {
     triggerOnce: true,
     threshold: 0.1
   });
+  
+  const swiperRef = useRef<SwiperType>();
+
+  const handlePrevClick = () => {
+    if (swiperRef.current) {
+      swiperRef.current.slidePrev();
+    }
+  };
+
+  const handleNextClick = () => {
+    if (swiperRef.current) {
+      swiperRef.current.slideNext();
+    }
+  };
 
   return (
     <section className="py-20 bg-[#10061E] relative overflow-hidden" ref={ref}>
@@ -125,28 +140,69 @@ export default function TrendyGamesSection() {
         className="container mx-auto trendy-games-container"
       >
         {/* Section Header */}
-        <div className="mb-12 text-center">
-          <h2 className="text-4xl font-bold text-white mb-4">Trendy Games</h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">
-            Discover our most popular game packages with exclusive offers and limited-time deals
-          </p>
+        <div className="mb-12 flex justify-between items-start">
+          <div className="text-left">
+            <h2 className="text-4xl font-bold text-white mb-4">Trendy Games</h2>
+            <p className="text-gray-400 max-w-2xl">
+              Discover our most popular game packages with exclusive offers and limited-time deals
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <button 
+              onClick={handlePrevClick}
+              className="trendy-nav-btn flex items-center justify-center"
+              aria-label="Previous slide"
+            >
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                strokeWidth={2} 
+                stroke="currentColor" 
+                className="w-6 h-6 text-white"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+              </svg>
+            </button>
+            <button 
+              onClick={handleNextClick}
+              className="trendy-nav-btn flex items-center justify-center"
+              aria-label="Next slide"
+            >
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                strokeWidth={2} 
+                stroke="currentColor" 
+                className="w-6 h-6 text-white"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Swiper Component */}
         <div className="relative overflow-hidden">
           <Swiper
+            onBeforeInit={(swiper) => {
+              swiperRef.current = swiper;
+            }}
             modules={[Navigation, Mousewheel]}
             spaceBetween={24}
             slidesPerView="auto"
-            navigation={true}
             className="trendy-games-swiper"
             centeredSlides={false}
             direction="horizontal"
             mousewheel={{
               forceToAxis: true,
-              sensitivity: 1,
-              thresholdDelta: 50
+              sensitivity: 3,
+              thresholdDelta: 10
             }}
+            resistance={false}
+            touchRatio={2}
+            speed={400}
             breakpoints={{
               320: {
                 slidesPerView: 'auto',

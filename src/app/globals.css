@@ -577,33 +577,47 @@ html, body {
   padding-bottom: 40px !important;
 }
 
+/* New squared navigation buttons */
+.trendy-nav-btn {
+  width: 40px !important;
+  height: 40px !important;
+  position: relative !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.3s ease !important;
+  margin: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+}
+
+.trendy-nav-btn::after {
+  font-size: 16px !important;
+  color: white !important;
+}
+
+.trendy-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.trendy-nav-btn.swiper-button-disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* Remove default Swiper navigation styles */
 .trendy-games-swiper .swiper-button-next,
 .trendy-games-swiper .swiper-button-prev {
-  color: white;
-  background: rgba(255, 255, 255, 0.1);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-}
-
-.trendy-games-swiper .swiper-button-next:hover,
-.trendy-games-swiper .swiper-button-prev:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.trendy-games-swiper .swiper-button-next::after,
-.trendy-games-swiper .swiper-button-prev::after {
-  font-size: 20px;
-}
-
-.trendy-games-swiper .swiper-button-disabled {
-  opacity: 0 !important;
+  position: static !important;
+  margin: 0 !important;
 }
 
 /* Optional: Add a gradient fade effect on the edges */
-.trendy-games-swiper::before,
-.trendy-games-swiper::after {
+.trendy-games-container {
+  position: relative;
+}
+
+.trendy-games-container::before,
+.trendy-games-container::after {
   content: '';
   position: absolute;
   top: 0;
@@ -611,14 +625,4 @@ html, body {
   width: 100px;
   z-index: 2;
   pointer-events: none;
-}
-
-.trendy-games-swiper::before {
-  left: 0;
-  background: linear-gradient(to right, #10061E, transparent);
-}
-
-.trendy-games-swiper::after {
-  right: 0;
-  background: linear-gradient(to left, #10061E, transparent);
 }
