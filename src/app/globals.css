@@ -499,6 +499,32 @@ body.loading {
   100% { background-position: 200% 50%; }
 }
 
+@keyframes gradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-text {
+  background: linear-gradient(
+    90deg,
+    #211C84 0%,
+    #4D55CC 25%,
+    #7A73D1 50%,
+    #B5A8D5 75%,
+    #211C84 100%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient 3s linear infinite;
+}
+
 /* Add these at the top of your file */
 html, body {
   overflow-x: hidden;
@@ -659,4 +685,67 @@ html, body {
   100% {
     background-position: -200% center;
   }
+}
+
+/* About section specific styles */
+.about-section-particle {
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Enhance blur shadow effect */
+.blur-shadow {
+  filter: blur(40px);
+  mix-blend-mode: screen;
+}
+
+/* Smooth transitions for text scaling */
+.text-scale-transition {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nexus__sticky {
+  z-index: 1;
+  background-color: #10061E;
+}
+
+.nexus-item {
+  transition: opacity 0.3s ease;
+}
+
+.nexus-item:not(.active) {
+  opacity: 0.5;
+}
+
+.nexus-item.active {
+  opacity: 1;
+}
+
+.nexus-item__progress-bar {
+  transition: transform 0.3s ease;
+}
+
+.perspective-transition {
+  perspective: 1000px;
+}
+
+.btn-main {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-main::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.btn-main:hover::before {
+  transform: translateX(100%);
 }
