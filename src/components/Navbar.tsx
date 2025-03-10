@@ -1,31 +1,41 @@
 "use client";
 
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import LogoutButton from './LogoutButton';
 import Image from 'next/image';
 
 const Navbar = () => {
-  // This is like a light switch - it remembers if we've scrolled or not
+  const [isVisible, setIsVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
+  const lastScrollY = useRef(0);
   const { user, isLoading } = useAuth();
 
-  // This is our scroll detector - it watches how far we've scrolled down the page
   useEffect(() => {
     const handleScroll = () => {
-      // If we scroll more than 150 pixels down, turn on our "switch"
-      if (window.scrollY > 150) {
-        setIsScrolled(true);
+      const currentScrollY = window.scrollY;
+      
+      // Show/hide navbar based on scroll direction and position
+      if (currentScrollY > 250) { // Only apply effects after 250px
+        if (currentScrollY < lastScrollY.current) {
+          // Scrolling UP
+          setIsVisible(true);
+          setIsScrolled(true);
+        } else {
+          // Scrolling DOWN
+          setIsVisible(false);
+        }
       } else {
-        // If we're at the top, turn off our "switch"
+        // Reset when near top
+        setIsVisible(true);
         setIsScrolled(false);
       }
+      
+      lastScrollY.current = currentScrollY;
     };
 
-    // Start watching for scrolling
-    window.addEventListener('scroll', handleScroll);
-    // Clean up when we're done (like picking up your toys when you're finished)
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -43,6 +53,7 @@ const Navbar = () => {
         ${isScrolled 
           ? 'bg-[#1D232A]/95 backdrop-blur-sm shadow-lg' // Using the dark purple color with 95% opacity
           : 'bg-transparent'} // When at top, be completely transparent
+        ${isVisible ? 'translate-y-0' : '-translate-y-full'}
       `}
     >
       {/* Left side - Logo */}
