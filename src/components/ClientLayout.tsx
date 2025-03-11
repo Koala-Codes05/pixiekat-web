@@ -18,52 +18,38 @@ export default function ClientLayout({
   useEffect(() => {
     if (loading) {
       document.body.style.overflow = 'hidden';
-      document.body.style.height = '100vh';
-      document.body.style.width = '100vw';
     } else {
       document.body.style.overflow = '';
-      document.body.style.height = '';
+      // Ensure we reset any inline styles
       document.body.style.width = '';
+      document.body.style.height = '';
+      document.documentElement.style.overflow = '';
     }
+
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+      document.documentElement.style.overflow = '';
+    };
   }, [loading]);
 
-  // Failsafe: If loading gets stuck, force complete after 6 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 6000);
-    
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleLoadingComplete = () => {
-    setLoading(false);
-  };
-
   return (
-    <Providers>
+    <div className="relative min-h-screen overflow-x-hidden">
       {loading && (
         <Loading 
-          onComplete={handleLoadingComplete} 
-          heroRef={heroRef} 
+          onComplete={() => setLoading(false)}
+          heroRef={heroRef}
           heroContainerRef={heroContainerRef}
         />
       )}
-      
-      <div 
-        ref={heroContainerRef} 
-        className={`${loading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
-        style={{ 
-          visibility: loading ? 'hidden' : 'visible',
-          position: 'relative'
-        }}
-      >
+      <Providers>
         <Navbar />
-        <main ref={heroRef}>
+        <main className="relative overflow-x-hidden">
           {children}
         </main>
         <Footer />
-      </div>
-    </Providers>
+      </Providers>
+    </div>
   );
 }
