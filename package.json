@@ -31,11 +31,8 @@
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
-<<<<<<< HEAD
-=======
     "react-intersection-observer": "^9.16.0",
     "swiper": "^11.2.5",
->>>>>>> 7222b659b1be0a551806218fc65db3ae2598f20b
     "zod": "^3.24.2"
   },
   "devDependencies": {
